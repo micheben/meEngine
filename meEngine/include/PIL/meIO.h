@@ -5,7 +5,7 @@
 
 namespace meEngine
 {
-	namespace IO
+	namespace meIO
 	{
 		typedef std::FILE meFile;
 

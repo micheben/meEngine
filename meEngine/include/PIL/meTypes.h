@@ -21,4 +21,13 @@ namespace meEngine
 
 	typedef wchar_t      meChar;
 	typedef std::wstring meString;
+
+	const auto& toString = static_cast<std::wstring(*)(int)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(long)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(long long)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(unsigned)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(unsigned long)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(unsigned long long)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(float)>(to_wstring);
+	const auto& toString = static_cast<std::wstring(*)(double)>(to_wstring);
 }
