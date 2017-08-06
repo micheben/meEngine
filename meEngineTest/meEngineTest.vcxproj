@@ -147,7 +147,7 @@
       <Project>{7f90f287-334b-4251-9c08-a7fe29301a83}</Project>
     </ProjectReference>
     <ProjectReference Include="..\meEngine\meEngine.vcxproj">
-      <Project>{4f3c8534-929f-424d-a8ba-dcdb3037b240}</Project>
+      <Project>{10d16e38-6b16-4cc6-b01a-7eda61162634}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

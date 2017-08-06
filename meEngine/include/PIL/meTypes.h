@@ -12,7 +12,7 @@ namespace meEngine
 	typedef int8_t  meInt8;
 	typedef int16_t meInt16;
 	typedef int32_t meInt32;
-	typedef int64_t meint64;
+	typedef int64_t meInt64;
 
 	typedef float  meFloat32;
 	typedef double meFloat64;
@@ -21,6 +21,4 @@ namespace meEngine
 
 	typedef wchar_t      meChar;
 	typedef std::wstring meString;
-
-	meInt16 Test(meInt16 a, meInt16 b);
 }

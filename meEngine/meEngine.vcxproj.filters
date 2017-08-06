@@ -13,24 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Quelldateien\PIL">
-      <UniqueIdentifier>{6e8a5972-e664-4293-942d-4b94f94dab82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headerdateien\PIL">
-      <UniqueIdentifier>{09c0be62-b585-46c6-9eb9-59ac0f2fe778}</UniqueIdentifier>
+      <UniqueIdentifier>{fc2e1cfd-a4de-42b3-a867-dda6309e1332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\PIL">
+      <UniqueIdentifier>{aeb83ee1-7451-4f03-840f-8f4dfe09fc5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PIL\meTypes.cpp">
-      <Filter>Quelldateien\PIL</Filter>
-    </ClCompile>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\PIL\meCollections.h">
+      <Filter>Headerdateien\PIL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PIL\meHiResTimer.h">
+      <Filter>Headerdateien\PIL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PIL\meIO.h">
+      <Filter>Headerdateien\PIL</Filter>
+    </ClInclude>
     <ClInclude Include="include\PIL\meTypes.h">
       <Filter>Headerdateien\PIL</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\PIL\meHiResTimer.cpp">
+      <Filter>Quelldateien\PIL</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
