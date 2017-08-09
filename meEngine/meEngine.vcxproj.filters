@@ -19,6 +19,18 @@
     <Filter Include="Quelldateien\PIL">
       <UniqueIdentifier>{aeb83ee1-7451-4f03-840f-8f4dfe09fc5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\core">
+      <UniqueIdentifier>{ef446536-903a-4265-958d-6b04d3574430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\core">
+      <UniqueIdentifier>{5a8ec1a6-67ba-4734-824e-bb464867b03f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\core\parser">
+      <UniqueIdentifier>{dfdfd2ff-e52c-4842-8676-3463be41bd87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\core\parser">
+      <UniqueIdentifier>{8150a7ba-c672-429e-b596-0c6b9f2b01a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -36,10 +48,34 @@
     <ClInclude Include="include\PIL\meTypes.h">
       <Filter>Headerdateien\PIL</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\meLogger.h">
+      <Filter>Headerdateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\parser\meCSVParser.h">
+      <Filter>Headerdateien\core\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\meError.h">
+      <Filter>Headerdateien\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PIL\meHiResTimer.cpp">
       <Filter>Quelldateien\PIL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\meLogger.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\parser\meCSVParser.cpp">
+      <Filter>Quelldateien\core\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PIL\meTypes.cpp">
+      <Filter>Quelldateien\PIL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PIL\meIO.cpp">
+      <Filter>Quelldateien\PIL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\meError.cpp">
+      <Filter>Quelldateien\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "PIL\meTypes.h"
-#include "PIL\meCollections.h"
-#include "PIL\meIO.h"
+#include "PIL/meTypes.h"
+#include "PIL/meCollections.h"
+#include "PIL/meIO.h"
 
-#include "core\meLogger.h"
-#include "core\meError.h"
+#include "core/meError.h"
 
 namespace meEngine
 {
@@ -40,6 +39,10 @@ namespace meEngine
 			/// <returns> 0 on success, error number else. </returns>
 			meError close();
 
+			/// <summary> Get the State of the internal file. </summary>
+			/// <returns> 0 if the internal file is opend, error number else. </returns>
+			meError state();
+
 			/// <summary> Parse the an opend file into the internal structure </summary>
 			/// <returns> 0 on success, error number else. </returns>
 			meError parse();
@@ -55,6 +58,16 @@ namespace meEngine
 			=======================
 			*/
 
+			/// <summary> Get the number of columns </summary>
+			/// <param name="num_colums"> The number of colums </param>
+			/// <returns> 0 on success, error number else. </returns>
+			meError columns(meUInt16& num_colums);
+
+			/// <summary> Get the number of rows (without header) </summary>
+			/// <param name="num_colums"> The number of rows </param>
+			/// <returns> 0 on success, error number else. </returns>
+			meError rows(meUInt16& num_rows);
+
 			/// <summary> Add a new header to the internal data structure </summary>
 			/// <param name="header"> The name of the header </param>
 			/// <returns> 0 on success, error number else. </returns>
@@ -63,7 +76,24 @@ namespace meEngine
 			/// <summary> Add a new row with the given data </summary>
 			/// <param name="data"> The data as a vector of strings </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError addRow(meVector<meString> data);
+			meError addRow(meVector<meString>& data);
+
+			/// <summary> Get the name of the Header at the given Index </summary>
+			/// <param name="index"> The Index </param>
+			/// <param name="header"> The meString where the Header will be saved </param>
+			/// <returns> 0 on success, error number else. </returns>
+			meError getHeader(meUInt16 index, meString& header);
+
+			/// <summary> Get the name of all Headers </summary>
+			/// <param name="headers"> The vector where the headers should be added (all will be appended) </param>
+			/// <returns> 0 if Successfull, meErrorCode otherwise </returns>
+			meError getHeaders(meVector<meString>& headers);
+
+			/// <summary> Get the row at the given index </summary>
+			/// <param name="index"> The index where to look at </param>
+			/// <param name="data"> The data as a vector of strings </param>
+			/// <returns> 0 on success, error number else. </returns>
+			meError getRow(meUInt16 index, meVector<meString>& data);
 
 		private:
 			meBool fileowner;	// True if we opend the file, false otherwise.

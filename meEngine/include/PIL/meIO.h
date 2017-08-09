@@ -2,6 +2,9 @@
 
 // For now we simply wrap c! standard functions
 #include <cstdio>
+#include <iostream>
+
+#include "PIL/meTypes.h"
 
 namespace meEngine
 {
@@ -9,11 +12,13 @@ namespace meEngine
 	{
 		typedef std::FILE meFile;
 
-		const auto& meOpenFile = std::fopen;
-		const auto& meCloseFile = std::fclose;
-		const auto& meFlushFile = std::fflush;
+		int meOpenFile(meFile** stream, const meString& filename, const meString& mode);
+		int meCloseFile(meFile* stream);
+		int meFlushFile(meFile* stream);
 
-		const auto& meReadFile = std::fread;
-		const auto& meWriteFile = std::fwrite;
+		int meReadFile(meFile* stream, meString& result, meUInt32 count);
+		int meWriteFile(meFile* stream, const meString& content);
+		
+		int meFileError(meFile* stream);
 	}
 }

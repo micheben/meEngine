@@ -140,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="meEngineTest.cpp" />
+    <ClCompile Include="core\parser\meCSVParserTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GTest\GTest.vcxproj">

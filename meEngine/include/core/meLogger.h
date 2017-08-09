@@ -10,7 +10,7 @@ namespace meEngine
 		const meUInt8 meErrorLevel = 1; // The lower the Level, the more important
 		const meUInt8 meWarningLevel = 2;
 		const meUInt8 meInfoLevel = 3;
-		class _meLogger
+		class meLogger
 		{
 		public:
 			/// <summary>Log the given message at a given level for a given categorie</summary>
@@ -22,9 +22,18 @@ namespace meEngine
 			//void info(meString msg, meUInt64 categorie = 0);
 			//void error(meString msg, meUInt64 categorie = 0);
 			//void addCategorie(meString name, meUInt64 mask);
+
+			meLogger(meLogger const&) = delete;
+			void operator=(meLogger const&) = delete;
+
+			static meLogger& getInstance();
 		private:
-			_meLogger(); // We use a singelton
+			meLogger(); // We use a singelton
 			//TODO CSV PARSER...
+
+			bool init;
 		};
+
+		
 	}
 }
