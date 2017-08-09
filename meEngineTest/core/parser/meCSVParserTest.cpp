@@ -57,13 +57,10 @@ TEST(meCSVParser, close)
 TEST(meCSVParser, state)
 {
 	meCSVParser test1(L"not_existent.csv");
-	EXPECT_EQ(test1.state(), meFileNotFoundError);
+	EXPECT_EQ(test1.state(), meFileNotFound);
 
 	meCSVParser test2(L"core/parser/test.csv");
 	EXPECT_EQ(test2.state(), 0);
-
-	meCSVParser test3(L"core/parser/test.csv");
-	EXPECT_EQ(test3.state(), meCouldNotOpenFileError);
 }
 
 TEST(meCSVParser, parse)
