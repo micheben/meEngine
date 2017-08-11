@@ -23,81 +23,38 @@ int getFileSize(const std::string &fileName)
 using namespace meEngine;
 using namespace meEngine::meParser;
 
-TEST(meCSVParser, construct)
+TEST(meCSVParser, openclose)
 {
-
-	char cCurrentPath[FILENAME_MAX];
-
-	if (!_getcwd(cCurrentPath, sizeof(cCurrentPath)))
-	{
-		return;
-	}
-
-	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
-
-	printf("The current working directory is %s", cCurrentPath);
-
-	meCSVParser test(L"core\\parser\\test.csv");
-	EXPECT_EQ(test.state(), 0);
-	
-	FILE* tmp;
-	auto err = meIO::meOpenFile(&tmp, L"core\\parser\\test.csv", L"r");
-	{
-		meCSVParser test2(tmp);
-		EXPECT_EQ(test.state(), 0);
-	}
-	EXPECT_NE(std::ftell(tmp), -1L);
-	std::fclose(tmp);
+	meIO::meFile* testfile;
+	meCSVParser test;
+	EXPECT_EQ(test._open(&testfile, L"core\\parser\\test.csv", L"r"), 0);
+	EXPECT_EQ(test._close(&testfile), 0);
+	EXPECT_EQ(test._close(&testfile), meFileClosedError);
 }
 
-TEST(meCSVParser, open)
+TEST(meCSVParser, read)
 {
 	meCSVParser test;
-	EXPECT_EQ(test.open(L"ressources/core/parser/test.csv"), 0);
-	EXPECT_EQ(test.state(), 0);
-}
-
-TEST(meCSVParser, close)
-{
-	meCSVParser test(L"ressources/core/parser/test.csv");
-	ASSERT_EQ(test.state(), 0);
-
-	test.close();
-	EXPECT_EQ(test.state(), meFileClosedError);
-}
-
-TEST(meCSVParser, state)
-{
-	meCSVParser test1(L"not_existent.csv");
-	EXPECT_EQ(test1.state(), meFileNotFound);
-
-	meCSVParser test2(L"ressources/core/parser/test.csv");
-	EXPECT_EQ(test2.state(), 0);
-}
-
-TEST(meCSVParser, parse)
-{
-	meCSVParser test(L"ressources/core/parser/test.csv");
 
 	// Only test if everything gets parsed.
-	EXPECT_EQ(test.parse(), 0);
+	EXPECT_EQ(test.read(L"core\\parser\\test.csv"), 0);
 }
 
 TEST(meCSVParser, write)
 {
-	meCSVParser test(L"ressources/core/parser/test.csv");
-	test.write(L"ressources/core/parser/test2.csv");
+	meCSVParser test(L"core\\parser\\test.csv");
+	EXPECT_EQ(test.write(L"core\\parser\\test2.csv"), 0);
 
-	EXPECT_EQ(getFileSize("ressources/core/parser/test.csv"), getFileSize("ressources/core/parser/test2.csv"));
+	EXPECT_EQ(getFileSize("core\\parser\\test.csv"), getFileSize("core\\parser\\test2.csv"));
 
-	std::remove("ressources/core/parser/test2.csv");
+	std::remove("core\\parser\\test2.csv");
 }
 
 TEST(meCSVParser, columns)
 {
-	meCSVParser test(L"ressources/core/parser/test.csv");
+	meCSVParser test(L"core\\parser\\test.csv");
 
-	meUInt16 ncols;
+	meUInt64 ncols;
 	EXPECT_EQ(test.columns(ncols), 0);
 	EXPECT_EQ(ncols, 3);
 
@@ -108,11 +65,11 @@ TEST(meCSVParser, columns)
 
 TEST(meCSVParser, rows)
 {
-	meCSVParser test(L"ressources/core/parser/test.csv");
+	meCSVParser test(L"core\\parser\\test.csv");
 
-	meUInt16 nrows;
+	meUInt64 nrows;
 	EXPECT_EQ(test.rows(nrows), 0);
-	EXPECT_EQ(nrows, 4);
+	EXPECT_EQ(nrows, 3);
 
 	meCSVParser test2;
 	EXPECT_EQ(test2.rows(nrows), 0);
@@ -124,7 +81,7 @@ TEST(meCSVParser, addHeader)
 {
 	meCSVParser test;
 
-	meUInt16 ncols;
+	meUInt64 ncols;
 
 	EXPECT_EQ(test.addHeader(L"test1"), 0);
 	EXPECT_EQ(test.columns(ncols), 0);
@@ -142,7 +99,7 @@ TEST(meCSVParser, addRow)
 	ASSERT_EQ(test.addHeader(L"test2"), 0);
 	ASSERT_EQ(test.addHeader(L"test3"), 0);
 
-	meUInt16 nrows;
+	meUInt64 nrows;
 
 	EXPECT_EQ(test.addRow(meVector<meString>({ L"a", L"b", L"c" })), 0);
 	EXPECT_EQ(test.rows(nrows), 0);
@@ -156,7 +113,7 @@ TEST(meCSVParser, addRow)
 	EXPECT_EQ(test.rows(nrows), 0);
 	EXPECT_EQ(nrows, 3);
 
-	EXPECT_EQ(test.addRow(meVector<meString>({ L"d", L"e", L"g", L"h" })), meTooManyRowsError);
+	EXPECT_EQ(test.addRow(meVector<meString>({ L"d", L"e", L"g", L"h" })), meToManyRowsError);
 	EXPECT_EQ(test.rows(nrows), 0);
 	EXPECT_EQ(nrows, 3);
 }

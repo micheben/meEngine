@@ -5,70 +5,49 @@
 using namespace meEngine::meParser;
 using namespace meEngine;
 
-meCSVParser::meCSVParser(meChar sep) : 
+meCSVParser::~meCSVParser()
+{
+
+}
+
+meCSVParser::meCSVParser(meChar sep) :
 	seperator(sep)
 {
 
 }
 
 meCSVParser::meCSVParser(meString filename, meChar sep) : 
-	seperator(sep), fileowner(true)
+	seperator(sep)
 {
-	meError err = this->open(filename);
-	if (err == 0)
-	{
-		this->parse();
-	}
+	this->read(filename);
 }
 
-meCSVParser::meCSVParser(meIO::meFile* file, meChar sep) :
-	seperator(sep), fileowner(false), file(file)
+meError meCSVParser::_open(meIO::meFile** file, meString filename, meString mode)
 {
-	this->parse();
-}
-
-meError meCSVParser::open(meString filename)
-{
-	// Open in r+ to check if the file exists.
-	int tmp = meIO::meOpenFile(&this->file, filename, L"r+");
-	meError err = meStdioerrToMeerr(tmp);
-	if (err != 0)
-	{
-		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, 0);
-	}
-	return err;
-}
-
-meError meCSVParser::close()
-{
-	int tmp = meIO::meCloseFile(this->file);
-	meError err = meStdioerrToMeerr(tmp);
-	if (err != 0)
-	{
-		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, 0);
-	}
-	return err;
-}
-
-meError meCSVParser::state()
-{
-	int tmp = meIO::meFileError(this->file);
+	int tmp = meIO::meOpenFile(file, filename, mode);
 	return meStdioerrToMeerr(tmp);
 }
 
-meError meCSVParser::parse()
+meError meCSVParser::_close(meIO::meFile** file)
 {
-	/* Check if file is ok */
-	meError err = this->state();
+	if ((*file) == NULL)
+	{
+		return meFileClosedError;	// TODO: Maybe return error code?
+	}
+	int tmp = meIO::meCloseFile(*file);
+	return meStdioerrToMeerr(tmp);
+}
+
+meError meCSVParser::read(meString filename)
+{
+	meIO::meFile* file;
+	meError err = this->_open(&file, filename, L"r");
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
 		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
 		return err;
 	}
-
 	
 	bool header = true;
 	meUInt64 pos = 0;
@@ -76,14 +55,15 @@ meError meCSVParser::parse()
 	meVector<meString> dataset;
 	meString line;
 
-	while (!meIO::meEOF(this->file))
+	while (!meIO::meEOF(file))
 	{
 		// Read line
-		int tmp = meIO::meReadFile(this->file, line, BATCHSIZE * 100);
+		line.clear();
+		int tmp = meIO::meReadFile(file, line, BATCHSIZE * 100);
+		meError err = meStdioerrToMeerr(tmp);
 		if (err != 0)
 		{
-			// TODO: do we want to log the error here, or do we just pass it?
-			meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+			this->_close(&file);
 			return err;
 		}
 		if (line.size() == 0)
@@ -100,16 +80,15 @@ meError meCSVParser::parse()
 		newpos = 0;
 		while (newpos != meString::npos)
 		{
-			pos = newpos;								// Update
 			newpos = line.find(seperator, pos);			// New search 
-			dataset.push_back(line.substr(pos + 1, newpos - pos - 1));
+			dataset.push_back(line.substr(pos, newpos - pos));
+			pos = newpos + 1;							// Update
 		}
-		dataset.push_back(line.substr(pos + 1, line.size() - pos - 1));
-
 		// Append data
 		if (header)
 		{
 			this->header = std::move(dataset);
+			header = false;
 		}
 		else
 		{
@@ -122,15 +101,15 @@ meError meCSVParser::parse()
 
 meError meCSVParser::write(meString filename)
 {
-	/* Check if file is ok */
-	meError err = this->state();
+	meIO::meFile* file;
+	meError err = this->_open(&file, filename, L"w");
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
 		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
 		return err;
 	}
-	
+
 	/* Build the content. */
 	meString content = L"";
 	meUInt16 linecount = 0;
@@ -141,7 +120,7 @@ meError meCSVParser::write(meString filename)
 		content += h;
 		content.push_back(seperator);
 	}
-	content.push_back(L'\n');
+	content[content.size()-1] = L'\n';
 	linecount++;
 
 	for (auto& line : data)
@@ -151,15 +130,15 @@ meError meCSVParser::write(meString filename)
 			content += entry;
 			content.push_back(seperator);
 		}
-		content.push_back(L'\n');
+		content[content.size() - 1] = L'\n';	// Replace last ; with newline
 		linecount++;
 
 		if (linecount >= BATCHSIZE)
 		{
-			int tmp = meIO::meWriteFile(this->file, content);
+			int tmp = meIO::meWriteFile(file, content);
 			if (tmp != 0)
 			{
-				// TODO: Cleanup file?
+				this->_close(&file);
 				return meStdioerrToMeerr(tmp);
 			}
 			content.clear();
@@ -169,16 +148,24 @@ meError meCSVParser::write(meString filename)
 
 	if (linecount != 0)
 	{
-		int tmp = meIO::meWriteFile(this->file, content);
+		int tmp = meIO::meWriteFile(file, content);
 		if (tmp != 0)
 		{
-			// TODO: Cleanup file?
+			this->_close(&file);
 			return meStdioerrToMeerr(tmp);
 		}
 		content.clear();
 		linecount = 0;
 	}
 
+	int tmp = meIO::meCloseFile(file);
+	err = meStdioerrToMeerr(tmp);
+	if (err != 0)
+	{
+		this->currState = err;
+		// TODO: do we want to log the error here, or do we just pass it?
+		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+	}
 	return 0;
 }
 
@@ -186,39 +173,63 @@ meError meCSVParser::write(meString filename)
 =======================
 Data Handling Functions
 =======================
-*/			
+*/
 
-meError meCSVParser::columns(meUInt16& num_colums)
+meError meCSVParser::columns(meUInt64& num_colums)
 {
-	return meNotYetImplementedError;
+	num_colums = this->header.size();
+	return 0;
 }
 
-meError meCSVParser::rows(meUInt16& num_rows)
+meError meCSVParser::rows(meUInt64& num_rows)
 {
-	return meNotYetImplementedError;
+	num_rows = this->data.size();
+	return 0;
 }
 
-meError meCSVParser::addHeader(meString header)
+meError meCSVParser::addHeader(const meString header)
 {
-	return meNotYetImplementedError;
+	this->header.push_back(header);
+	return 0;
 }
 
-meError meCSVParser::addRow(meVector<meString>& data)
+meError meCSVParser::addRow(const meVector<meString>& data)
 {
-	return meNotYetImplementedError;
+	auto tmp = data;
+	while (tmp.size() < this->header.size())
+	{
+		tmp.push_back(L"");
+	}
+	if (tmp.size() > this->header.size())
+	{
+		return meToManyRowsError;
+	}
+	this->data.push_back(move(tmp));
+	return 0;
 }
 
 meError meCSVParser::getHeader(meUInt16 index, meString& header)
 {
-	return meNotYetImplementedError;
+	if (this->header.size() <= index)
+	{
+		return meIndexOutOfRangeError;
+	}
+	header = this->header[index];
+	return 0;
 }
 
 meError meCSVParser::getHeaders(meVector<meString>& headers)
 {
-	return meNotYetImplementedError;
+	headers = this->header;
+	return 0;
 }
 
 meError meCSVParser::getRow(meUInt16 index, meVector<meString>& data)
 {
-	return meNotYetImplementedError;
+	if (this->data.size() <= index)
+	{
+		return meIndexOutOfRangeError;
+	}
+	data = this->data[index];
+	return 0;
 }

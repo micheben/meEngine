@@ -21,11 +21,11 @@ namespace meEngine
 
 			/// <summary> Size of a Line batch during writing </summary>
 			static const meUInt16 BATCHSIZE = 1000;
-
-			/* 
-			=====================
-			IO Handling Functions
-			===================== 
+			
+			/*
+			===========================
+			Constructor / Deconstructor
+			===========================
 			*/
 
 			/// <summary> Class for working with CSV files </summary>
@@ -35,31 +35,35 @@ namespace meEngine
 			/// <param name="filename"> The filename of the file. It will be opend and parsed directly </param>
 			meCSVParser(meString filename, meChar sep = L';');
 
-			/// <summary> Class for working with CSV files </summary>
-			/// <param name="file"> A handle to an opened file. The file will be parsed. </param>
-			meCSVParser(meIO::meFile* file, meChar sep = L';');
+			meCSVParser::~meCSVParser();
 
-			/// <summary> Open a file for parsing or writing </summary>
+			/* 
+			=====================
+			IO Handling Functions
+			===================== 
+			*/
+
+			/// <summary> Open a file for parsing or writing (INTERNAL ONLY)</summary>
+			/// <param name="file"> File handle where the opened file will be saved </param>
 			/// <param name="filename"> The filename of the file to be opend </param>
+			/// <param name="mode"> The open mode </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError open(meString filename);
+			meError _open(meIO::meFile** file, meString filename, meString mode);
 
 			/// <summary> Close the file if any is opend. </summary>
+			/// <param name="file"> File handle where the opened file will be saved </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError close();
-
-			/// <summary> Get the State of the internal file. </summary>
-			/// <returns> 0 if the internal file is opend, error number else. </returns>
-			meError state();
-
-			/// <summary> Parse the an opend file into the internal structure </summary>
+			meError _close(meIO::meFile** file);
+			
+			/// <summary> Read the data from a csv file </summary>
+			/// <param name="filename"> The target filename</param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError parse();
+			meError read(meString filename);
 
 			/// <summary> Write the internal data into a csv file </summary>
-			/// <param name="filename"> (Optional) The target filename. If it's the empty String, try to write to an opend file</param>
+			/// <param name="filename"> The target filename.</param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError write(meString filename = L"");
+			meError write(meString filename);
 
 			/*
 			=======================
@@ -70,22 +74,22 @@ namespace meEngine
 			/// <summary> Get the number of columns </summary>
 			/// <param name="num_colums"> The number of colums </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError columns(meUInt16& num_colums);
+			meError columns(meUInt64& num_colums);
 
 			/// <summary> Get the number of rows (without header) </summary>
 			/// <param name="num_colums"> The number of rows </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError rows(meUInt16& num_rows);
+			meError rows(meUInt64& num_rows);
 
 			/// <summary> Add a new header to the internal data structure </summary>
 			/// <param name="header"> The name of the header </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError addHeader(meString header);
+			meError addHeader(const meString header);
 
 			/// <summary> Add a new row with the given data </summary>
 			/// <param name="data"> The data as a vector of strings </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError addRow(meVector<meString>& data);
+			meError addRow(const meVector<meString>& data);
 
 			/// <summary> Get the name of the Header at the given Index </summary>
 			/// <param name="index"> The Index </param>
@@ -104,13 +108,11 @@ namespace meEngine
 			/// <returns> 0 on success, error number else. </returns>
 			meError getRow(meUInt16 index, meVector<meString>& data);
 
-		private:
-			meBool fileowner;	// True if we opend the file, false otherwise.
-			meIO::meFile* file;
-
+		private:			
 			meVector<meString> header;
 			meVector< meVector<meString> > data;
 			meChar seperator;
+			meError currState;
 		};
 	}
 }

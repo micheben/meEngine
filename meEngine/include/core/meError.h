@@ -10,6 +10,7 @@ namespace meEngine
 	/* General & undefined Errors */
 	const meError meUndefinedError         = 1;
 	const meError meNotYetImplementedError = 2;
+	const meError meIndexOutOfRangeError   = 3;
 
 	/* IO Errors */
 	meError meStdioerrToMeerr(int stdioerrno);
@@ -26,10 +27,10 @@ namespace meEngine
 	const meError meNoDiscSpace = 1000 + ENOSPC;
 	const meError meReadOnlyFileSystem = 1000 + EROFS;
 	const meError meFilenameToLong = 1000 + ENAMETOOLONG;
-	const meError meFileClosedError = 1100;	// 1100 is surely not used :P
+	const meError meFileClosedError = 1100;	// 1100 and above is surely not used :P
 
 	/* Parser Errors */
-	const meError meTooManyRowsError      = 2001;
+	const meError meToManyRowsError = 2001;
 
 	meString meErrMessage(meError err);
 }
