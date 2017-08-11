@@ -14,8 +14,11 @@ meCSVParser::meCSVParser(meChar sep) :
 meCSVParser::meCSVParser(meString filename, meChar sep) : 
 	seperator(sep), fileowner(true)
 {
-	this->open(filename);
-	this->parse();
+	meError err = this->open(filename);
+	if (err == 0)
+	{
+		this->parse();
+	}
 }
 
 meCSVParser::meCSVParser(meIO::meFile* file, meChar sep) :
@@ -57,7 +60,64 @@ meError meCSVParser::state()
 
 meError meCSVParser::parse()
 {
-	return meNotYetImplementedError;
+	/* Check if file is ok */
+	meError err = this->state();
+	if (err != 0)
+	{
+		// TODO: do we want to log the error here, or do we just pass it?
+		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+		return err;
+	}
+
+	
+	bool header = true;
+	meUInt64 pos = 0;
+	meUInt64 newpos = 0;
+	meVector<meString> dataset;
+	meString line;
+
+	while (!meIO::meEOF(this->file))
+	{
+		// Read line
+		int tmp = meIO::meReadFile(this->file, line, BATCHSIZE * 100);
+		if (err != 0)
+		{
+			// TODO: do we want to log the error here, or do we just pass it?
+			meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+			return err;
+		}
+		if (line.size() == 0)
+		{
+			break; // end of file AND no data
+		}
+		if (line[line.size() - 1] == L'\n')
+		{
+			line.pop_back();	// Remove new line at the end
+		}
+
+		// Split into tokens
+		pos = 0;
+		newpos = 0;
+		while (newpos != meString::npos)
+		{
+			pos = newpos;								// Update
+			newpos = line.find(seperator, pos);			// New search 
+			dataset.push_back(line.substr(pos + 1, newpos - pos - 1));
+		}
+		dataset.push_back(line.substr(pos + 1, line.size() - pos - 1));
+
+		// Append data
+		if (header)
+		{
+			this->header = std::move(dataset);
+		}
+		else
+		{
+			this->data.push_back(std::move(dataset));
+		}
+		dataset.clear();
+	}
+	return 0;
 }
 
 meError meCSVParser::write(meString filename)

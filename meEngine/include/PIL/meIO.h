@@ -20,5 +20,6 @@ namespace meEngine
 		int meWriteFile(meFile* stream, const meString& content);
 		
 		int meFileError(meFile* stream);
+		int meEOF(meFile* stream);
 	}
 }
