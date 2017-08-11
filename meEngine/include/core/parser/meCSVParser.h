@@ -13,6 +13,15 @@ namespace meEngine
 		class meCSVParser
 		{
 		public:
+			/*
+			=========
+			Constants
+			=========
+			*/
+
+			/// <summary> Size of a Line batch during writing </summary>
+			static const meUInt16 BATCHSIZE = 1000;
+
 			/* 
 			=====================
 			IO Handling Functions
@@ -20,15 +29,15 @@ namespace meEngine
 			*/
 
 			/// <summary> Class for working with CSV files </summary>
-			meCSVParser();
+			meCSVParser(meChar sep = L';');
 
 			/// <summary> Class for working with CSV files </summary>
 			/// <param name="filename"> The filename of the file. It will be opend and parsed directly </param>
-			meCSVParser(meString filename);
+			meCSVParser(meString filename, meChar sep = L';');
 
 			/// <summary> Class for working with CSV files </summary>
 			/// <param name="file"> A handle to an opened file. The file will be parsed. </param>
-			meCSVParser(meIO::meFile* file);
+			meCSVParser(meIO::meFile* file, meChar sep = L';');
 
 			/// <summary> Open a file for parsing or writing </summary>
 			/// <param name="filename"> The filename of the file to be opend </param>
@@ -101,6 +110,7 @@ namespace meEngine
 
 			meVector<meString> header;
 			meVector< meVector<meString> > data;
+			meChar seperator;
 		};
 	}
 }

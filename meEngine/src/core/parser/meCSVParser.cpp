@@ -5,20 +5,22 @@
 using namespace meEngine::meParser;
 using namespace meEngine;
 
-meCSVParser::meCSVParser()
+meCSVParser::meCSVParser(meChar sep) : 
+	seperator(sep)
 {
 
 }
 
-meCSVParser::meCSVParser(meString filename)
+meCSVParser::meCSVParser(meString filename, meChar sep) : 
+	seperator(sep), fileowner(true)
 {
 	this->open(filename);
 	this->parse();
 }
 
-meCSVParser::meCSVParser(meIO::meFile* file)
+meCSVParser::meCSVParser(meIO::meFile* file, meChar sep) :
+	seperator(sep), fileowner(false), file(file)
 {
-	this->file = file;
 	this->parse();
 }
 
@@ -49,7 +51,8 @@ meError meCSVParser::close()
 
 meError meCSVParser::state()
 {
-	return meNotYetImplementedError;
+	int tmp = meIO::meFileError(this->file);
+	return meStdioerrToMeerr(tmp);
 }
 
 meError meCSVParser::parse()
@@ -59,7 +62,64 @@ meError meCSVParser::parse()
 
 meError meCSVParser::write(meString filename)
 {
-	return meNotYetImplementedError;
+	/* Check if file is ok */
+	meError err = this->state();
+	if (err != 0)
+	{
+		// TODO: do we want to log the error here, or do we just pass it?
+		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+		return err;
+	}
+	
+	/* Build the content. */
+	meString content = L"";
+	meUInt16 linecount = 0;
+
+	content.reserve(BATCHSIZE * 100);	// Magic number... estimated size of one line.
+	for (auto& h : header)
+	{
+		content += h;
+		content.push_back(seperator);
+	}
+	content.push_back(L'\n');
+	linecount++;
+
+	for (auto& line : data)
+	{
+		for (auto& entry : line)
+		{
+			content += entry;
+			content.push_back(seperator);
+		}
+		content.push_back(L'\n');
+		linecount++;
+
+		if (linecount >= BATCHSIZE)
+		{
+			int tmp = meIO::meWriteFile(this->file, content);
+			if (tmp != 0)
+			{
+				// TODO: Cleanup file?
+				return meStdioerrToMeerr(tmp);
+			}
+			content.clear();
+			linecount = 0;
+		}
+	}
+
+	if (linecount != 0)
+	{
+		int tmp = meIO::meWriteFile(this->file, content);
+		if (tmp != 0)
+		{
+			// TODO: Cleanup file?
+			return meStdioerrToMeerr(tmp);
+		}
+		content.clear();
+		linecount = 0;
+	}
+
+	return 0;
 }
 
 /*

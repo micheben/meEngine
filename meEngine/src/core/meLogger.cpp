@@ -1,6 +1,8 @@
 #include "core\meLogger.h"
 
+#include <ctime>
 #include <iostream>
+#include <iomanip>
 
 using namespace meEngine;
 using namespace meEngine::meLogging;
@@ -10,7 +12,7 @@ meLogger::meLogger()
 	this->init = false;
 }
 
-void meLogger::log(meString msg, meUInt8 lvl, meUInt64 categorie)
+void meLogger::log(meString msg, meUInt8 lvl, meString categorie)
 {
 	if (!this->init)
 	{
