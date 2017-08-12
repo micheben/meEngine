@@ -11,14 +11,7 @@ namespace meEngine
 		class meConfigParser
 		{
 
-			/*
-			=========
-			Constants
-			=========
-			*/
-
-			/// <summary> Size of a Line batch during writing </summary>
-			static const meUInt16 BATCHSIZE = 1000;
+		public:
 
 			/*
 			===========================
