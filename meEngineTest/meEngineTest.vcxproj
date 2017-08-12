@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\parser\meCSVParserTest.cpp" />
+    <ClCompile Include="meRNGTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GTest\GTest.vcxproj">

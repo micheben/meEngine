@@ -57,6 +57,9 @@
     <ClInclude Include="include\core\meError.h">
       <Filter>Headerdateien\core</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\meRNG.h">
+      <Filter>Headerdateien\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PIL\meHiResTimer.cpp">
@@ -75,6 +78,9 @@
       <Filter>Quelldateien\PIL</Filter>
     </ClCompile>
     <ClCompile Include="src\core\meError.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\meRNG.cpp">
       <Filter>Quelldateien\core</Filter>
     </ClCompile>
   </ItemGroup>
