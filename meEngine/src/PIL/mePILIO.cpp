@@ -1,24 +1,24 @@
-#include "PIL/meIO.h"
+#include "PIL/mePILIO.h"
 using namespace meEngine;
-using namespace meEngine::meIO;
+using namespace meEngine::mePILIO;
 #include <wchar.h>
 
-int meEngine::meIO::meOpenFile(meFile** stream, const meString& filename, const meString& mode)
+int meEngine::mePILIO::meOpenFile(meFile** stream, const meString& filename, const meString& mode)
 {
 	wprintf(L"Open %s", filename.c_str());
 
 	return _wfopen_s(stream, filename.c_str(), mode.c_str());
 }
-int meEngine::meIO::meCloseFile(meFile* stream)
+int meEngine::mePILIO::meCloseFile(meFile* stream)
 {
 	return std::fclose(stream);
 }
-int meEngine::meIO::meFlushFile(meFile* stream)
+int meEngine::mePILIO::meFlushFile(meFile* stream)
 {
 	return std::fflush(stream);
 }
 
-int meEngine::meIO::meReadFile(meFile* stream, meString& result, meUInt32 count)
+int meEngine::mePILIO::meReadFile(meFile* stream, meString& result, meUInt32 count)
 {
 	wchar_t* buffer = new wchar_t[count];
 	wchar_t* ret = std::fgetws(buffer, count, stream);
@@ -39,17 +39,17 @@ int meEngine::meIO::meReadFile(meFile* stream, meString& result, meUInt32 count)
 	delete[] buffer;
 	return 0;
 }
-int meEngine::meIO::meWriteFile(meFile* stream, const meString& content)
+int meEngine::mePILIO::meWriteFile(meFile* stream, const meString& content)
 {
 	return std::fputws(content.c_str(), stream);
 }
 
-int meEngine::meIO::meFileError(meFile* stream)
+int meEngine::mePILIO::meFileError(meFile* stream)
 {
 	return std::ferror(stream);
 }
 
-int meEngine::meIO::meEOF(meFile* stream)
+int meEngine::mePILIO::meEOF(meFile* stream)
 {
 	return std::feof(stream);
 }

@@ -8,7 +8,7 @@
 
 namespace meEngine
 {
-	namespace meIO
+	namespace mePILIO
 	{
 		typedef std::FILE meFile;
 

@@ -1,6 +1,7 @@
 #include "core/parser/meCSVParser.h"
 
 #include "core/meLogger.h"
+#include "core/meIO.h"
 
 using namespace meEngine::meParser;
 using namespace meEngine;
@@ -16,32 +17,17 @@ meCSVParser::meCSVParser(meChar sep) :
 
 }
 
-meCSVParser::meCSVParser(meString filename, meChar sep) : 
+meCSVParser::meCSVParser(const meString& filename, meChar sep) :
 	seperator(sep)
 {
 	this->read(filename);
 }
 
-meError meCSVParser::_open(meIO::meFile** file, meString filename, meString mode)
-{
-	int tmp = meIO::meOpenFile(file, filename, mode);
-	return meStdioerrToMeerr(tmp);
-}
 
-meError meCSVParser::_close(meIO::meFile** file)
-{
-	if ((*file) == NULL)
-	{
-		return meFileClosedError;	// TODO: Maybe return error code?
-	}
-	int tmp = meIO::meCloseFile(*file);
-	return meStdioerrToMeerr(tmp);
-}
-
-meError meCSVParser::read(meString filename)
+meError meCSVParser::read(const meString& filename)
 {
 	meIO::meFile* file;
-	meError err = this->_open(&file, filename, L"r");
+	meError err = meIO::open(&file, filename, L"r");
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
@@ -59,11 +45,10 @@ meError meCSVParser::read(meString filename)
 	{
 		// Read line
 		line.clear();
-		int tmp = meIO::meReadFile(file, line, BATCHSIZE * 100);
-		meError err = meStdioerrToMeerr(tmp);
+		meError tmp = meIO::readLine(file, line, BATCHSIZE * 100);
 		if (err != 0)
 		{
-			this->_close(&file);
+			meIO::close(file);
 			return err;
 		}
 		if (line.size() == 0)
@@ -96,13 +81,15 @@ meError meCSVParser::read(meString filename)
 		}
 		dataset.clear();
 	}
-	return 0;
+
+	err = meIO::close(file);
+	return err;
 }
 
-meError meCSVParser::write(meString filename)
+meError meCSVParser::write(const meString& filename)
 {
 	meIO::meFile* file;
-	meError err = this->_open(&file, filename, L"w");
+	meError err = meIO::open(&file, filename, L"w");
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
@@ -110,18 +97,23 @@ meError meCSVParser::write(meString filename)
 		return err;
 	}
 
+	if (this->header.size() == 0)	// No content
+	{
+		err = meIO::close(file);
+		return meNoDataGiven;
+	}
+
 	/* Build the content. */
 	meString content = L"";
 	meUInt16 linecount = 0;
 
 	content.reserve(BATCHSIZE * 100);	// Magic number... estimated size of one line.
-	for (auto& h : header)
+	for (auto& h : this->header)
 	{
 		content += h;
 		content.push_back(seperator);
 	}
-	content[content.size()-1] = L'\n';
-	linecount++;
+	content[content.size() - 1] = L'\n';
 
 	for (auto& line : data)
 	{
@@ -135,11 +127,11 @@ meError meCSVParser::write(meString filename)
 
 		if (linecount >= BATCHSIZE)
 		{
-			int tmp = meIO::meWriteFile(file, content);
-			if (tmp != 0)
+			err = meIO::writeString(file, content);
+			if (err != 0)
 			{
-				this->_close(&file);
-				return meStdioerrToMeerr(tmp);
+				meIO::close(file);
+				return err;
 			}
 			content.clear();
 			linecount = 0;
@@ -148,25 +140,18 @@ meError meCSVParser::write(meString filename)
 
 	if (linecount != 0)
 	{
-		int tmp = meIO::meWriteFile(file, content);
-		if (tmp != 0)
+		err = meIO::writeString(file, content);
+		if (err != 0)
 		{
-			this->_close(&file);
-			return meStdioerrToMeerr(tmp);
+			meIO::close(file);
+			return err;
 		}
 		content.clear();
 		linecount = 0;
 	}
 
-	int tmp = meIO::meCloseFile(file);
-	err = meStdioerrToMeerr(tmp);
-	if (err != 0)
-	{
-		this->currState = err;
-		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
-	}
-	return 0;
+	err = meIO::close(file);
+	return err;
 }
 
 /*
@@ -187,7 +172,7 @@ meError meCSVParser::rows(meUInt64& num_rows)
 	return 0;
 }
 
-meError meCSVParser::addHeader(const meString header)
+meError meCSVParser::addHeader(const meString& header)
 {
 	this->header.push_back(header);
 	return 0;

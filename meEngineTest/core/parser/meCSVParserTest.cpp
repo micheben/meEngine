@@ -4,7 +4,6 @@
 
 #include "core/parser/meCSVParser.h"
 #include "core/meError.h"
-#include "PIL/meIO.h"
 
 /* Helper Function ...*/
 int getFileSize(const std::string &fileName)
@@ -23,14 +22,6 @@ int getFileSize(const std::string &fileName)
 using namespace meEngine;
 using namespace meEngine::meParser;
 
-TEST(meCSVParser, openclose)
-{
-	meIO::meFile* testfile;
-	meCSVParser test;
-	EXPECT_EQ(test._open(&testfile, L"core\\parser\\test.csv", L"r"), 0);
-	EXPECT_EQ(test._close(&testfile), 0);
-	EXPECT_EQ(test._close(&testfile), meFileClosedError);
-}
 
 TEST(meCSVParser, read)
 {
@@ -46,6 +37,16 @@ TEST(meCSVParser, write)
 	EXPECT_EQ(test.write(L"core\\parser\\test2.csv"), 0);
 
 	EXPECT_EQ(getFileSize("core\\parser\\test.csv"), getFileSize("core\\parser\\test2.csv"));
+
+	std::remove("core\\parser\\test2.csv");
+}
+
+TEST(meCSVParser, writeempty)
+{
+	meCSVParser test;
+	EXPECT_EQ(test.write(L"core\\parser\\test2.csv"), meNoDataGiven);
+
+	EXPECT_EQ(getFileSize("core\\parser\\test2.csv"), 0);
 
 	std::remove("core\\parser\\test2.csv");
 }

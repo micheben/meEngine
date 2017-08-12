@@ -42,9 +42,6 @@
     <ClInclude Include="include\PIL\meHiResTimer.h">
       <Filter>Headerdateien\PIL</Filter>
     </ClInclude>
-    <ClInclude Include="include\PIL\meIO.h">
-      <Filter>Headerdateien\PIL</Filter>
-    </ClInclude>
     <ClInclude Include="include\PIL\meTypes.h">
       <Filter>Headerdateien\PIL</Filter>
     </ClInclude>
@@ -54,10 +51,22 @@
     <ClInclude Include="include\core\parser\meCSVParser.h">
       <Filter>Headerdateien\core\parser</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\meRNG.h">
+      <Filter>Headerdateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\parser\meConfigParser.h">
+      <Filter>Headerdateien\core\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PIL\mePILIO.h">
+      <Filter>Headerdateien\PIL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\meIO.h">
+      <Filter>Headerdateien\core</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\meError.h">
       <Filter>Headerdateien\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\meRNG.h">
+    <ClInclude Include="include\core\meConfig.h">
       <Filter>Headerdateien\core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,13 +83,22 @@
     <ClCompile Include="src\PIL\meTypes.cpp">
       <Filter>Quelldateien\PIL</Filter>
     </ClCompile>
-    <ClCompile Include="src\PIL\meIO.cpp">
-      <Filter>Quelldateien\PIL</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\meError.cpp">
       <Filter>Quelldateien\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\meRNG.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\meConfig.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\parser\meConfigParser.cpp">
+      <Filter>Quelldateien\core\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PIL\mePILIO.cpp">
+      <Filter>Quelldateien\PIL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\meIO.cpp">
       <Filter>Quelldateien\core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,7 +2,6 @@
 
 #include "PIL/meTypes.h"
 #include "PIL/meCollections.h"
-#include "PIL/meIO.h"
 
 #include "core/meError.h"
 
@@ -33,7 +32,7 @@ namespace meEngine
 
 			/// <summary> Class for working with CSV files </summary>
 			/// <param name="filename"> The filename of the file. It will be opend and parsed directly </param>
-			meCSVParser(meString filename, meChar sep = L';');
+			meCSVParser(const meString& filename, meChar sep = L';');
 
 			meCSVParser::~meCSVParser();
 
@@ -42,28 +41,16 @@ namespace meEngine
 			IO Handling Functions
 			===================== 
 			*/
-
-			/// <summary> Open a file for parsing or writing (INTERNAL ONLY)</summary>
-			/// <param name="file"> File handle where the opened file will be saved </param>
-			/// <param name="filename"> The filename of the file to be opend </param>
-			/// <param name="mode"> The open mode </param>
-			/// <returns> 0 on success, error number else. </returns>
-			meError _open(meIO::meFile** file, meString filename, meString mode);
-
-			/// <summary> Close the file if any is opend. </summary>
-			/// <param name="file"> File handle where the opened file will be saved </param>
-			/// <returns> 0 on success, error number else. </returns>
-			meError _close(meIO::meFile** file);
 			
 			/// <summary> Read the data from a csv file </summary>
 			/// <param name="filename"> The target filename</param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError read(meString filename);
+			meError read(const meString& filename);
 
 			/// <summary> Write the internal data into a csv file </summary>
 			/// <param name="filename"> The target filename.</param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError write(meString filename);
+			meError write(const meString& filename);
 
 			/*
 			=======================
@@ -84,7 +71,7 @@ namespace meEngine
 			/// <summary> Add a new header to the internal data structure </summary>
 			/// <param name="header"> The name of the header </param>
 			/// <returns> 0 on success, error number else. </returns>
-			meError addHeader(const meString header);
+			meError addHeader(const meString& header);
 
 			/// <summary> Add a new row with the given data </summary>
 			/// <param name="data"> The data as a vector of strings </param>

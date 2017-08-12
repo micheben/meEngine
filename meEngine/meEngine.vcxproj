@@ -133,22 +133,28 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\meConfig.h" />
     <ClInclude Include="include\core\meError.h" />
+    <ClInclude Include="include\core\meIO.h" />
     <ClInclude Include="include\core\meLogger.h" />
+    <ClInclude Include="include\core\parser\meConfigParser.h" />
     <ClInclude Include="include\core\parser\meCSVParser.h" />
     <ClInclude Include="include\core\meRNG.h" />
     <ClInclude Include="include\PIL\meCollections.h" />
     <ClInclude Include="include\PIL\meHiResTimer.h" />
-    <ClInclude Include="include\PIL\meIO.h" />
+    <ClInclude Include="include\PIL\mePILIO.h" />
     <ClInclude Include="include\PIL\meTypes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\meConfig.cpp" />
     <ClCompile Include="src\core\meError.cpp" />
     <ClCompile Include="src\core\meLogger.cpp" />
+    <ClCompile Include="src\core\parser\meConfigParser.cpp" />
     <ClCompile Include="src\core\parser\meCSVParser.cpp" />
     <ClCompile Include="src\core\meRNG.cpp" />
+    <ClCompile Include="src\core\meIO.cpp" />
     <ClCompile Include="src\PIL\meHiResTimer.cpp" />
-    <ClCompile Include="src\PIL\meIO.cpp" />
+    <ClCompile Include="src\PIL\mePILIO.cpp" />
     <ClCompile Include="src\PIL\meTypes.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

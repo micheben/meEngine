@@ -30,7 +30,8 @@ namespace meEngine
 	const meError meFileClosedError = 1100;	// 1100 and above is surely not used :P
 
 	/* Parser Errors */
-	const meError meToManyRowsError = 2001;
+	const meError meNoDataGiven = 2001;
+	const meError meToManyRowsError = 2002;
 
 	meString meErrMessage(meError err);
 }
