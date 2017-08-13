@@ -4,6 +4,23 @@
 using namespace::meEngine;
 using namespace::meEngine::meParser;
 
+bool _splitLine(meString& line, meString& token, meString& value)
+{
+	auto pos = line.find(L"=");
+
+	if (pos == meString::npos)
+	{
+		return false;
+	}
+
+	token = line.substr(0, pos);
+
+	value.clear();
+	value = line.substr(pos + 1);
+
+	return true;
+}
+
 
 meConfigParser::meConfigParser()
 {
@@ -29,16 +46,25 @@ meError meConfigParser::read(meString filename, meConfig& conf)
 	}
 
 	meString line;
+	meString token;
+	meString value;
 	while (!meIO::meEOF(file))
 	{
 		// Read line
 		line.clear();
-		err = meIO::readLine(file, line, BATCHSIZE * 100);
+		err = meIO::readLine(file, line);
 		if (err != 0)
 		{
 			meIO::close(file);
 			return err;
 		}
+
+		if (!_splitLine(line, token, value))
+		{
+			meLogging::meLogger::meLogWarn(L"Invalid token found: %s. Ignore Parameter", L"meConfigParser");
+			continue;
+		}
+
 	}
 
 	err = meIO::close(file);

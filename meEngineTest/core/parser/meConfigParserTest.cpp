@@ -1,23 +1,9 @@
 #include "gtest/gtest.h"
 
-#include <fstream>
+#include "../../util.h"
 
 #include "core/parser/meConfigParser.h"
 #include "core/meError.h"
-
-/* Helper Function ...*/
-int getFileSize(const std::string &fileName)
-{
-	std::ifstream file(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
-	if (!file.is_open())
-	{
-		return -1;
-	}
-	file.seekg(0, std::ios::end);
-	int fileSize = (int)file.tellg();
-	file.close();
-	return fileSize;
-}
 
 using namespace meEngine;
 using namespace meEngine::meParser;
@@ -32,7 +18,7 @@ TEST(meConfigParser, read)
 	EXPECT_EQ(test.read(L"core\\parser\\test.config", conf), 0);
 }
 
-TEST(meCSVParser, write)
+TEST(meConfigParser, write)
 {
 	meConfigParser test;
 	meConfig conf;
@@ -46,7 +32,7 @@ TEST(meCSVParser, write)
 	std::remove("core\\parser\\test2.config");
 }
 
-TEST(meCSVParser, writeempty)
+TEST(meConfigParser, writeempty)
 {
 	meConfigParser test;
 	meConfig conf;

@@ -141,8 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\parser\meConfigParserTest.cpp" />
     <ClCompile Include="core\parser\meCSVParserTest.cpp" />
-    <ClCompile Include="meRNGTest.cpp" />
+    <ClCompile Include="core\parser\meRNGTest.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GTest\GTest.vcxproj">
@@ -151,6 +153,9 @@
     <ProjectReference Include="..\meEngine\meEngine.vcxproj">
       <Project>{10d16e38-6b16-4cc6-b01a-7eda61162634}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

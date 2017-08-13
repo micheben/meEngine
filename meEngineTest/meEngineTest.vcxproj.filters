@@ -13,13 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Quelldateien\core">
+      <UniqueIdentifier>{8c5b695e-4476-4ba9-9105-41468bf25709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="util.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\parser\meConfigParserTest.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
     <ClCompile Include="core\parser\meCSVParserTest.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\core</Filter>
     </ClCompile>
-    <ClCompile Include="meRNGTest.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="core\parser\meRNGTest.cpp">
+      <Filter>Quelldateien\core</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -25,7 +25,7 @@ namespace meEngine
 		/// <param name="line"> The line for the data </param>
 		/// <param name="size"> The maximum size to be read </param>
 		/// <returns> 0 on success, error number else. </returns>
-		meError readLine(meFile* file, meString& line, meUInt32 size);
+		meError readLine(meFile* file, meString& line, meUInt32 size=2000);
 
 		/// <summary> Write a String to the file </summary>
 		/// <param name="file"> The file handle </param>
