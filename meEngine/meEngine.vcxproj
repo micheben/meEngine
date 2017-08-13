@@ -148,7 +148,6 @@
   <ItemGroup>
     <ClCompile Include="src\core\meConfig.cpp" />
     <ClCompile Include="src\core\meError.cpp" />
-    <ClCompile Include="src\core\meLogger.cpp" />
     <ClCompile Include="src\core\parser\meConfigParser.cpp" />
     <ClCompile Include="src\core\parser\meCSVParser.cpp" />
     <ClCompile Include="src\core\meRNG.cpp" />

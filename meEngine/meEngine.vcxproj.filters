@@ -74,9 +74,6 @@
     <ClCompile Include="src\PIL\meHiResTimer.cpp">
       <Filter>Quelldateien\PIL</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\meLogger.cpp">
-      <Filter>Quelldateien\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\parser\meCSVParser.cpp">
       <Filter>Quelldateien\core\parser</Filter>
     </ClCompile>
