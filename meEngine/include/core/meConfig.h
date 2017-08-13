@@ -4,6 +4,7 @@ namespace meEngine
 {
 	class meConfig
 	{
-
+	public:
+		meString logfile;
 	};
 }

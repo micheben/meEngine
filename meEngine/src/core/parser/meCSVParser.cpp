@@ -31,7 +31,7 @@ meError meCSVParser::read(const meString& filename)
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+		meLogging::meLogger::getInstance().log(1, L"meCSVParser", meErrMessage(err));
 		return err;
 	}
 	
@@ -93,7 +93,7 @@ meError meCSVParser::write(const meString& filename)
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::getInstance().log(meErrMessage(err), 1, L"meCSVParser");
+		meLogging::meLogger::getInstance().log(1, L"meCSVParser", meErrMessage(err));
 		return err;
 	}
 

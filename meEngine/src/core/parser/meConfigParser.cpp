@@ -41,7 +41,7 @@ meError meConfigParser::read(meString filename, meConfig& conf)
 	if (err != 0)
 	{
 		// TODO: do we want to log the error here, or do we just pass it?
-		meLogging::meLogger::meLogError(meErrMessage(err), L"meConfigParser");
+		meLogging::meLogger::meLogError(L"meConfigParser", meErrMessage(err));
 		return err;
 	}
 
@@ -61,10 +61,12 @@ meError meConfigParser::read(meString filename, meConfig& conf)
 
 		if (!_splitLine(line, token, value))
 		{
-			meLogging::meLogger::meLogWarn(L"Invalid token found: %s. Ignore Parameter", L"meConfigParser");
+			meLogging::meLogger::meLogWarn(L"meConfigParser", L"Invalid token found: %s. Ignore Parameter", line);
 			continue;
 		}
 
+		if (token == L"logfile")
+			conf.logfile = value;
 	}
 
 	err = meIO::close(file);
@@ -74,5 +76,17 @@ meError meConfigParser::read(meString filename, meConfig& conf)
 
 meError meConfigParser::write(meString filename, const meConfig& conf)
 {
-	return meNotYetImplementedError;
+	meIO::meFile* file;
+	meError err = meIO::open(&file, filename, L"r");
+	if (err != 0)
+	{
+		// TODO: do we want to log the error here, or do we just pass it?
+		meLogging::meLogger::meLogError(L"meConfigParser", meErrMessage(err));
+		return err;
+	}
+
+	meEngine::meIO::writeString(file, L"logfile=" + conf.logfile);
+
+	err = meIO::close(file);
+	return err;
 }

@@ -16,3 +16,4 @@ googletest*
 *.log
 *.tlog
 *.ilk
+*.enc
